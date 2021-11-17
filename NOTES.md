@@ -28,3 +28,4 @@
 
 - Credentials used to download the `https://server.com/testapp-autoupdater` script are supposed to be stored in the Jenkins credentials Store.
 - We asume that the Jenkins agents have Terraform and Python installed.
+- We have decided to configure Jenkins to run region pipelines in sequence instead running them in parallel. While running region pipelines in parallel we reduce the overall duration, we decided to run pipelines in sequence trying to simulate a "Rolling Update". That way if something goes wrong with one deployment (and is detected as an error by the pipeline), the rest of deployments won't proceed and only one region is affected. To make pipelines fail, maybe some tests should be added in the future.
