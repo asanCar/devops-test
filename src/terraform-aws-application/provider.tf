@@ -9,10 +9,10 @@ terraform {
     }
   }
 
-  # backend "s3" {
-  #   bucket         = "test"
-  #   key            = "${var.aws_region}/terraform.tfstate"
-  #   region         = "${var.aws_region}"
-  #   dynamodb_table = "terraform_locks"
-  # }
+  backend "s3" {
+    bucket         = "test-${var.aws_region}"
+    key            = "${var.aws_region}/terraform.tfstate"
+    region         = "${var.aws_region}"
+    dynamodb_table = "terraform_locks"
+  }
 }

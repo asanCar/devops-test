@@ -13,7 +13,7 @@ data "aws_subnets" "vpc_subnets" {
 
 # Create a new Security Group in the current VPC
 resource "aws_security_group" "test_security_group" {
-  # name                               = "" # Random name
+  # name      = "" # Random name
   vpc_id      = data.aws_vpc.test_vpc.id
 
   egress {
@@ -44,7 +44,7 @@ resource "aws_security_group" "test_security_group" {
 
 # Create the Elastic Load Balancer
 resource "aws_lb" "test_app_lb" {
-  # name                               = "" # Random name
+  # name             = "" # Random name
   internal           = var.lb_is_internal
   load_balancer_type = "application"
   security_groups    = [aws_security_group.test_security_group.id]
@@ -55,7 +55,7 @@ resource "aws_lb" "test_app_lb" {
 
 # Create 
 resource "aws_lb_target_group" "test_lb_target_group" {
-  # name                               = "" # Random name
+  # name                             = "" # Random name
   port                               = 80
   protocol                           = "HTTP"
   vpc_id                             = data.aws_vpc.test_vpc.id
@@ -66,19 +66,19 @@ resource "aws_lb_target_group" "test_lb_target_group" {
 }
 
 # Create a Load Balancer Listener for https requests
-# resource "aws_lb_listener" "https" {
-#   load_balancer_arn = aws_lb.test_app_lb.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = var.lb_ssl_policy
-#   certificate_arn   = var.lb_certificate_arn
-#   default_action {
-#     target_group_arn = aws_lb_target_group.test_lb_target_group.arn
-#     type             = "forward"
-#   }
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.test_app_lb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = var.lb_ssl_policy
+  certificate_arn   = var.lb_certificate_arn
+  default_action {
+    target_group_arn = aws_lb_target_group.test_lb_target_group.arn
+    type             = "forward"
+  }
 
-#   tags = var.tags
-# }
+  tags = var.tags
+}
 
 # Create a Load Balancer Listener for http requests
 resource "aws_lb_listener" "http" {
@@ -144,22 +144,23 @@ data "template_cloudinit_config" "config" {
     content_type = "text/x-shellscript"
     content      = <<-EOF
     #!/bin/bash
-    # curl -o /usr/local/bin/testapp-autoupdater -u ${var.autoupdater_server_username}:${var.autoupdater_server_pass} https://server.com/testapp-autoupdater
-    # chmod +x /usr/local/bin/testapp-autoupdater
+    curl -o /usr/local/bin/testapp-autoupdater -u ${var.autoupdater_server_username}:${var.autoupdater_server_pass} https://server.com/testapp-autoupdater
+    chmod +x /usr/local/bin/testapp-autoupdater
+    echo Hello
     EOF
   }
 }
 
 # Create a Launch Template for the EC2 instances
 resource "aws_launch_template" "test_launch_template" {
-  # name                               = "" # Random name
+  # name                 = "" # Random name
   image_id               = var.ami_id
   instance_type          = var.ec2_instance_type
   user_data              = data.template_cloudinit_config.config.rendered
 
-  # credit_specification {
-  #   cpu_credits = "unlimited"
-  # }
+  credit_specification {
+    cpu_credits = "unlimited"
+  }
 
   iam_instance_profile {
     name = aws_iam_instance_profile.iam_profile.name

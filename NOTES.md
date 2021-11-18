@@ -4,6 +4,7 @@
 
 - As Jenkins Agents nodes are configured with the IAM Role required to operate to an AWS Account, no credentials configuration is needed in Terraform.
 - I was thinking to split Terraform root module in smaller ones to group resources by the same context, but trying to accomplish a MVP solution I decided to stay with the root module and take that into account for a future refactor.
+- We asume that an s3 has been created previously in each AWS region (us-east-1, us-west-2, eu-west-1).
 
 ### Auto Scaling Group
 
