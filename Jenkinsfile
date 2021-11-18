@@ -111,8 +111,7 @@ def deployApp(String autoScalerName) {
     ]) {
         dir("src/autoupdater_script") {
             sh """
-                source venv/bin/activate
-                venv/bin/python ssm_autoupdater.py --autoscaling-group-name ${autoScalerName}"
+                venv/bin/python ssm_autoupdater.py --autoscaling-group-name ${autoScalerName}
             """
         }
     }
